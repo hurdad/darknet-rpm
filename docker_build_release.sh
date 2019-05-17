@@ -14,5 +14,5 @@ then
 fi
 
 # push image to docker repo
-#docker push $repo/$image:$version
-#docker push $repo/$image:latest
+docker push $repo/$image:$version
+docker push $repo/$image:latest
