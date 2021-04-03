@@ -1,3 +1,4 @@
+%global debug_package %{nil}
 Name:           darknet
 Version:        %{VERSION}
 Release:        %{RELEASE}%{?dist}
@@ -8,7 +9,7 @@ Url:            https://github.com/hurdad/darknet
 Source:         %{name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  cmake3
-BuildRequires:	opencv-devel = 2.4.5
+BuildRequires:	opencv-devel
 
 %description
 Darknet Yolo v3 & v2 Neural Networks for object detection 
@@ -25,12 +26,20 @@ This package contains the development headers and library for %{name}.
 %setup -n %{name}-%{version}
 
 %build
-cmake3 -DCMAKE_BUILD_TYPE=Release .
+cmake3 -DCMAKE_BUILD_TYPE=Release \
+	-DENABLE_CUDA=ON \
+	-DCMAKE_CUDA_COMPILER=/usr/local/cuda/bin/nvcc \
+	-DENABLE_CUDNN=ON \
+	-DENABLE_OPENCV=ON \
+	-DBUILD_USELIB_TRACK=ON \
+	-DENABLE_ZED_CAMERA=OFF \
+	.
 make %{?_smp_mflags}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-make install DESTDIR=%{buildroot}
+#make install DESTDIR=%{buildroot}
+%make_install 
 
 mkdir -p %{buildroot}/usr/bin/
 mkdir -p %{buildroot}/usr/include/darknet/
@@ -38,8 +47,8 @@ mkdir -p %{buildroot}/usr/lib64/
 mkdir -p %{buildroot}/usr/share/darknet/
 
 mv %{buildroot}/%{_builddir}/%{name}-%{version}/darknet %{buildroot}/usr/bin/
-mv %{buildroot}/%{_builddir}/%{name}-%{version}/include/* %{buildroot}/usr/include/darknet/
-mv %{buildroot}/%{_builddir}/%{name}-%{version}/lib/libdarklib.so %{buildroot}/usr/lib64
+mv %{buildroot}/%{_builddir}/%{name}-%{version}/include/* %{buildroot}/usr/include/
+mv %{buildroot}/%{_builddir}/%{name}-%{version}/libdarknet.so %{buildroot}/usr/lib64
 mv %{buildroot}/%{_builddir}/%{name}-%{version}/share/darknet/* %{buildroot}/usr/share/darknet
 
 rm -rf %{buildroot}/%{_builddir}
@@ -57,7 +66,7 @@ ldconfig
 %defattr(-,root,root,-)
 %doc LICENSE README.md
 %{_bindir}/darknet
-%{_libdir}/libdarklib.so
+%{_libdir}/libdarknet.so
 %{_datadir}/darknet/
 
 %files devel

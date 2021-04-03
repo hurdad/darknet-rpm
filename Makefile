@@ -1,5 +1,5 @@
 # darknet
-version = 0.2.5
+version = 0.3.0
 release = 1
 name = darknet
 full_name = $(name)-$(version)
