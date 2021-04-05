@@ -10,6 +10,7 @@ Source:         %{name}-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildRequires:  cmake3
 BuildRequires:	opencv-devel
+BuildRequires:	libcudnn8-devel
 
 %description
 Darknet Yolo v3 & v2 Neural Networks for object detection 
@@ -28,6 +29,7 @@ This package contains the development headers and library for %{name}.
 %build
 cmake3 -DCMAKE_BUILD_TYPE=Release \
 	-DENABLE_CUDA=ON \
+ 	-DCMAKE_CUDA_ARCHITECTURES="61" \
 	-DCMAKE_CUDA_COMPILER=/usr/local/cuda/bin/nvcc \
 	-DENABLE_CUDNN=ON \
 	-DENABLE_OPENCV=ON \
@@ -38,7 +40,6 @@ make %{?_smp_mflags}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-#make install DESTDIR=%{buildroot}
 %make_install 
 
 mkdir -p %{buildroot}/usr/bin/
