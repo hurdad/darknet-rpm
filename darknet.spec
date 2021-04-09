@@ -27,30 +27,32 @@ This package contains the development headers and library for %{name}.
 %setup -n %{name}-%{version}
 
 %build
-cmake3 -DCMAKE_BUILD_TYPE=Release \
-	-DENABLE_CUDA=ON \
- 	-DCMAKE_CUDA_ARCHITECTURES="61" \
-	-DCMAKE_CUDA_COMPILER=/usr/local/cuda/bin/nvcc \
-	-DENABLE_CUDNN=ON \
-	-DENABLE_OPENCV=ON \
-	-DBUILD_USELIB_TRACK=ON \
-	-DENABLE_ZED_CAMERA=OFF \
-	.
+#cmake3 -DCMAKE_BUILD_TYPE=Release \
+#	-DENABLE_CUDA=ON \
+# 	-DCMAKE_CUDA_ARCHITECTURES="61" \
+#	-DCMAKE_CUDA_COMPILER=/usr/local/cuda/bin/nvcc \
+#	-DENABLE_CUDNN=ON \
+#	-DENABLE_OPENCV=ON \
+#	-DBUILD_USELIB_TRACK=ON \
+#	-DENABLE_ZED_CAMERA=OFF \
+#	.
 make %{?_smp_mflags}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-%make_install 
 
 mkdir -p %{buildroot}/usr/bin/
 mkdir -p %{buildroot}/usr/include/darknet/
 mkdir -p %{buildroot}/usr/lib64/
-mkdir -p %{buildroot}/usr/share/darknet/
+#mkdir -p %{buildroot}/usr/share/darknet/
 
-mv %{buildroot}/%{_builddir}/%{name}-%{version}/darknet %{buildroot}/usr/bin/
-mv %{buildroot}/%{_builddir}/%{name}-%{version}/include/* %{buildroot}/usr/include/
-mv %{buildroot}/%{_builddir}/%{name}-%{version}/libdarknet.so %{buildroot}/usr/lib64
-mv %{buildroot}/%{_builddir}/%{name}-%{version}/share/darknet/* %{buildroot}/usr/share/darknet
+#mv %{buildroot}/%{_builddir}/%{name}-%{version}/darknet %{buildroot}/usr/bin/
+mv darknet %{buildroot}/usr/bin/
+#mv %{buildroot}/%{_builddir}/%{name}-%{version}/include/* %{buildroot}/usr/include/
+mv include/* %{buildroot}/usr/include/darknet/
+#mv %{buildroot}/%{_builddir}/%{name}-%{version}/libdarknet.so %{buildroot}/usr/lib64
+mv libdarknet.so %{buildroot}/usr/lib64
+#mv %{buildroot}/%{_builddir}/%{name}-%{version}/share/darknet/* %{buildroot}/usr/share/darknet
 
 rm -rf %{buildroot}/%{_builddir}
 
@@ -68,7 +70,7 @@ ldconfig
 %doc LICENSE README.md
 %{_bindir}/darknet
 %{_libdir}/libdarknet.so
-%{_datadir}/darknet/
+#%{_datadir}/darknet/
 
 %files devel
 %defattr(-,root,root,-)
